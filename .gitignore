@@ -1,0 +1,25 @@
+# Runtime state — never commit
+events.jsonl
+.hlpm-review/
+.context-usage
+.correction-state
+.pr-pipeline.json
+*.sprint-continue-signal
+.sprint-continuation.md
+.sprint-tool-count
+.exec/
+CURRENT-REVIEW.md
+snapshot.json
+
+# Personal ecosystem config (start from .example files)
+ecosystem/services.json
+ecosystem/integration-prefs.json
+
+# Node
+node_modules/
+scripts/node_modules/
+dist/
+
+# Local settings
+.claude/settings.local.json
+.mcp.json

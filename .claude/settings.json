@@ -1,0 +1,108 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "bash .claude/scripts/context-monitor.sh"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/context-cycle-hook.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/sprint-phase-guard.sh"
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/session-end-cycle.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/hlpm-ping.sh session_end"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/hlpm-log-session-end.sh"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/session-start-continuation.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/hlpm-ping.sh session_start"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/session-start-hook.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/hlpm-summarize.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/correction-capture-hook.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/sprint-stop-guard.sh"
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/scripts/stop-failure-hook.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

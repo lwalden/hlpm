@@ -1,0 +1,35 @@
+{
+  "version": "1",
+  "last_updated": "2026-01-01",
+  "preferences": [
+    {
+      "category": "ai-calls",
+      "description": "Any integration that calls an AI/LLM model",
+      "preferred": "my-ai-gateway",
+      "preferred_detail": "Use your local AI gateway service rather than initializing provider SDKs directly. Callers authenticate with a Bearer token; all model calls route through your gateway.",
+      "avoid": [
+        "direct SDK initialization without gateway",
+        "raw API keys in application code"
+      ],
+      "notes": "Use the OpenAI-compatible endpoint — point the openai SDK at localhost"
+    },
+    {
+      "category": "automation-workflows",
+      "description": "Multi-step automation, scheduled jobs, webhook triggers",
+      "preferred": "my-automation-hub",
+      "preferred_detail": "Use your local automation platform for multi-step workflows rather than writing custom scripts.",
+      "avoid": [],
+      "notes": null
+    },
+    {
+      "category": "social-publishing",
+      "description": "Posting to social platforms",
+      "preferred": "my-social-mcp-server",
+      "preferred_detail": "Use your local MCP server tools for social publishing rather than calling platform APIs directly.",
+      "avoid": [
+        "direct platform API calls without the MCP layer"
+      ],
+      "notes": null
+    }
+  ]
+}

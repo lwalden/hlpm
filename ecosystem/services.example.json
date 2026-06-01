@@ -1,0 +1,26 @@
+{
+  "version": "1",
+  "last_updated": "2026-01-01",
+  "services": [
+    {
+      "name": "my-api-gateway",
+      "repo": "/path/to/my-api-gateway",
+      "description": "Local HTTP gateway — describe what it does and how callers authenticate",
+      "service_type": "api-gateway",
+      "port": 3000,
+      "launch_command": "node src/index.js",
+      "base_url": "http://localhost:3000",
+      "notes": "Add notes about auth, env vars, health endpoints, and consumption patterns here"
+    },
+    {
+      "name": "my-automation-hub",
+      "repo": "/path/to/my-automation-hub",
+      "description": "Local automation platform — describe the tool and what workflows it runs",
+      "service_type": "automation",
+      "port": 5678,
+      "launch_command": "./start.sh",
+      "base_url": "http://localhost:5678",
+      "notes": "Add launch notes, env file location, and known quirks here"
+    }
+  ]
+}

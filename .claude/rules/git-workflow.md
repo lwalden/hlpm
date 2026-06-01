@@ -1,0 +1,5 @@
+- Never commit directly to `main` or `master` — always branch.
+- Branch names: `feature/`, `fix/`, or `chore/` prefix + short description.
+- Commit messages: `type(scope): description` — explain why, not what. Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`.
+- Create PRs for all changes. Do not merge PRs unless explicitly asked.
+  - **Sprint exception:** When running as sprint-master, pr-pipeliner is authorized to merge as part of the pipeline. The approved sprint spec is the standing merge authorization — do not ask again per PR.
