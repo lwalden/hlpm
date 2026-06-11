@@ -21,6 +21,7 @@ Run these reviews with Claude. Open this file in a Claude session, say "let's do
 - [ ] Any new ideas added to IDEAS.md this week?
 - [ ] Any ideas past their 7-day cooling period ready to score?
 - [ ] Anything in PIPELINE.md ready to promote or kill?
+- [ ] Any untriaged AAM tooling findings from sprint retros? Run `/findings` to triage.
 
 ### 4. Quick Wins
 - [ ] Any small tasks avoided that would take < 30 minutes?

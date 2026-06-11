@@ -7,6 +7,7 @@ A Claude Code plugin for solo developers managing a portfolio of repos from a si
 - **Portfolio state surface** — `PROJECT-INDEX.md`, `PRIORITIES.md`, and `docs/dispatch-contract.md` answer "what's active, paused, and how do repos relate" without scanning the filesystem
 - **Dispatch executive layer** — `/dispatch`, `/status`, `/resume`, `/cancel` commands drive autonomous Claude sessions in consumer repos via AIAgentMinder
 - **Drift defense** — session-boundary event log + read-time enrichment surfaces what changed across repos since your last HLPM session
+- **Tooling-findings triage** — `/findings` triages findings about AIAgentMinder itself, captured by sprint retros in consumer repos (promote to the AAM backlog, escalate to a GitHub issue, or dismiss)
 - **Review cadence** — weekly / monthly / quarterly reviews from `REVIEW-CHECKLIST.md`
 - **Ecosystem MCP server** — optional local service registry (`scripts/mcp-server.ts`) so Claude knows your local services before recommending external APIs
 - **Dispatch watcher** — Windows Scheduled Task (`scripts/dispatch-watcher.ps1`) auto-resumes stalled dispatches after context cycles

@@ -1,5 +1,7 @@
 # Runtime state — never commit
 events.jsonl
+tooling-findings.jsonl
+tooling-findings-archive.jsonl
 .hlpm-review/
 .context-usage
 .correction-state

@@ -87,6 +87,20 @@ fi
 # Drift check runs independently.
 DRIFT=$(bash "$SCRIPT_DIR/hlpm-drift-check.sh" 2>/dev/null || true)
 
+# Tooling-findings inbox: written by AAM's hlpm-finding.sh during sprint
+# retros in consumer repos. Never trimmed by writers — entries persist until
+# /findings triage disposes them, so surface a pending count every session.
+FINDINGS=""
+FINDINGS_FILE="$HLPM_DIR/tooling-findings.jsonl"
+if [[ -f "$FINDINGS_FILE" ]]; then
+  FCOUNT=$(grep -c '"summary"' "$FINDINGS_FILE" 2>/dev/null || echo 0)
+  if [[ "${FCOUNT:-0}" -gt 0 ]]; then
+    FREPOS=$(sed -n 's/.*"repo":"\([^"]*\)".*/\1/p' "$FINDINGS_FILE" 2>/dev/null \
+      | sort -u | paste -sd ',' - | sed 's/,/, /g')
+    FINDINGS="${FCOUNT} untriaged AAM tooling finding(s) from: ${FREPOS:-unknown}. Run /findings to triage."
+  fi
+fi
+
 # Build final context block.
 CONTEXT=""
 if [[ -n "$LINES" ]]; then
@@ -95,6 +109,10 @@ fi
 if [[ -n "$DRIFT" ]]; then
   [[ -n "$CONTEXT" ]] && CONTEXT="${CONTEXT}"$'\n'
   CONTEXT="${CONTEXT}[HLPM drift] ${DRIFT}"
+fi
+if [[ -n "$FINDINGS" ]]; then
+  [[ -n "$CONTEXT" ]] && CONTEXT="${CONTEXT}"$'\n'
+  CONTEXT="${CONTEXT}[HLPM findings] ${FINDINGS}"
 fi
 
 [[ -z "$CONTEXT" ]] && exit 0
