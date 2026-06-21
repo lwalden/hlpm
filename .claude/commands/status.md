@@ -76,7 +76,37 @@ Agent may have crashed. Use /cancel accessi-shield and re-dispatch, or investiga
 After the table, note actionable next steps:
 - For blocked repos: "Use `/resume {repo}` with the resolution to unblock"
 - For stalled repos: "Use `/cancel {repo}` and re-dispatch, or check the process manually"
-- For done repos: "Completed. `.exec/` files can be cleaned up or left for audit trail"
+- For done repos: noted as completed and auto-cleaned in step 6 below (or run `/cleanup {repo}` manually)
+
+### 6. Auto-clean finished dispatches
+
+After presenting the view, archive and remove the `.exec/` state of every repo
+you just reported in a terminal state (`done`, `cancelled`, or `error`) so the
+tracking files stop lingering as uncommitted local artifacts in the worked-in
+repo. Do this in the same run that surfaces the final status, so the user always
+sees the result alongside the cleanup notice.
+
+Determine `ARCHIVE_ROOT`: use the `HLPM_EXEC_ARCHIVE` env var if set; otherwise
+`{HLPM repo root}/.dispatch-archive` (gitignored — local audit store).
+
+For each terminal-status repo, run the shared cleanup script:
+
+```bash
+bash {HLPM repo root}/.claude/scripts/exec-cleanup.sh "{SOURCE_ROOT}/{repo}" "{ARCHIVE_ROOT}"
+```
+
+**NEVER** auto-clean a repo whose status is `running`, `blocked`, or `starting` —
+the script refuses these by default; do not pass `--force` here.
+
+Then append one line to the report (omit it if nothing was terminal):
+
+```
+Cleaned up finished dispatch(es): {repos}. Audit trail archived under {ARCHIVE_ROOT}.
+```
+
+The full `.exec/` payload (directive + final status + append-only history) is
+copied to `{ARCHIVE_ROOT}/{repo}/{timestamp}-{directive_id}/` before removal, so
+the audit trail survives outside the consumer repo's working tree.
 
 ## Notes
 
