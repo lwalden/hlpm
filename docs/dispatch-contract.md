@@ -53,7 +53,7 @@ This is the missing layer above AIAgentMinder. AAM handles execution within a si
 
 Both files live at `.exec/` in the consumer repo root, NOT in `.claude/`. Rationale: `.claude/` is AAM-managed; `.exec/` is dispatch-managed. Separation of concerns.
 
-`.exec/` is gitignored portfolio-wide via the AAM gitignore template (to be added in Phase 0 cleanup).
+`.exec/` is gitignored portfolio-wide via the AAM gitignore template (to be added in Phase 0 cleanup). Independently of that, the executive layer archives and removes `.exec/` once a dispatch reaches a terminal state — see [Cleanup](#cleanup-end-of-lifecycle) — so the tracking files do not linger as working-tree artifacts even in repos whose gitignore has not yet been updated.
 
 | File | Purpose |
 |---|---|
@@ -196,6 +196,32 @@ To cancel a running dispatch: rewrite `.exec/directive.md` setting `mode: cancel
 
 The user is then responsible for cleaning up any uncommitted state, or starting a new dispatch.
 
+## Cleanup (end of lifecycle)
+
+The per-repo agent does **not** delete its own `.exec/` on completion — the
+executive layer still needs to read the final `done` / `cancelled` / `error`
+status. Cleanup is therefore an **executive-layer** responsibility, run once a
+terminal status has been observed and surfaced:
+
+1. The `.exec/` payload (directive + final status + append-only history) is
+   copied to a timestamped, out-of-tree archive at
+   `{ARCHIVE_ROOT}/{repo}/{timestamp}-{directive_id}/`, where `ARCHIVE_ROOT`
+   defaults to `{HLPM repo root}/.dispatch-archive` (gitignored — a local,
+   portfolio-wide audit store; override via `HLPM_EXEC_ARCHIVE`).
+2. `.exec/` is then removed from the consumer repo's working tree, so the
+   dispatch tracking files stop lingering as uncommitted local artifacts.
+
+Cleanup only acts on a terminal status (`done`, `cancelled`, `error`); it
+refuses to touch a `running`, `blocked`, or `starting` dispatch unless forced.
+Two entry points share one script (`.claude/scripts/exec-cleanup.sh`):
+
+- **Automatic** — `/status` cleans every repo it reports in a terminal state, in
+  the same run that surfaces the final status.
+- **Manual** — `/cleanup [repos]` performs an on-demand sweep.
+
+Because the archive lives outside the consumer repo, the audit trail is
+preserved even though `.exec/` is gone from the working tree.
+
 ## Heartbeat / stall detection
 
 When the executive layer reads a status file:
@@ -260,7 +286,8 @@ These are the components that need to be built in `highest-level-project-managem
 2. **`/status` skill** — reads `.exec/status.md` from every repo with an active or recent dispatch, aggregates into a unified table, surfaces stalled agents and human blockers.
 3. **`/resume` skill** — given a blocker resolution from the user, rewrites the relevant `.exec/directive.md` with a `# Resume Context` section.
 4. **`/cancel` skill** — sets `mode: cancelled` in the target repo's `.exec/directive.md`.
-5. **Auto-status-on-session-start** — the agent rule in `~/.claude/rules/git-strategy.md` already says "scan working state at session start"; extend this to also call `/status` automatically when the session is in `highest-level-project-management`.
+5. **`/cleanup` skill** — archives and removes `.exec/` for terminal-status repos (see [Cleanup](#cleanup-end-of-lifecycle)). Also run automatically by `/status` for repos it reports as finished.
+6. **Auto-status-on-session-start** — the agent rule in `~/.claude/rules/git-strategy.md` already says "scan working state at session start"; extend this to also call `/status` automatically when the session is in `highest-level-project-management`.
 
 ## What AAM needs to provide
 

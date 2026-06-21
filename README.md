@@ -5,7 +5,7 @@ A Claude Code plugin for solo developers managing a portfolio of repos from a si
 ## What it does
 
 - **Portfolio state surface** — `PROJECT-INDEX.md`, `PRIORITIES.md`, and `docs/dispatch-contract.md` answer "what's active, paused, and how do repos relate" without scanning the filesystem
-- **Dispatch executive layer** — `/dispatch`, `/status`, `/resume`, `/cancel` commands drive autonomous Claude sessions in consumer repos via AIAgentMinder
+- **Dispatch executive layer** — `/dispatch`, `/status`, `/resume`, `/cancel`, `/cleanup` commands drive autonomous Claude sessions in consumer repos via AIAgentMinder, and archive away their tracking artifacts when finished
 - **Drift defense** — session-boundary event log + read-time enrichment surfaces what changed across repos since your last HLPM session
 - **Review cadence** — weekly / monthly / quarterly reviews from `REVIEW-CHECKLIST.md`
 - **Ecosystem MCP server** — optional local service registry (`scripts/mcp-server.ts`) so Claude knows your local services before recommending external APIs
@@ -99,6 +99,7 @@ Open Claude Code in your HLPM directory, then:
 /status
 /resume my-repo
 /cancel my-repo
+/cleanup my-repo
 /high-level-review
 /portfolio-review
 ```
@@ -110,7 +111,7 @@ See `docs/dispatch-contract.md` for the full contract schema.
 ```
 .claude/
   agents/     Sprint-master, planner, speccer, QA, review lenses, and more
-  commands/   /dispatch, /status, /resume, /cancel, /portfolio-review, /high-level-review
+  commands/   /dispatch, /status, /resume, /cancel, /cleanup, /portfolio-review, /high-level-review
   rules/      Universal Claude Code rules (git discipline, tool-first, context cycling)
   scripts/    Hook scripts, backlog manager, drift detector, session summarizer
   skills/     AAM skill shortcuts
